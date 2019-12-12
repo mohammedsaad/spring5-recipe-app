@@ -2,10 +2,13 @@ package guru.springframework.business.service;
 
 import guru.springframework.business.model.entity.Recipe;
 import guru.springframework.business.model.repository.RecipeRepository;
+import guru.springframework.exception.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -28,5 +31,25 @@ public class RecipeServiceImpl implements RecipeService {
         Set<Recipe> recipeSet = new HashSet<>();
         recipeRepository.findAll().iterator().forEachRemaining(recipeSet::add);
         return recipeSet;
+    }
+    @Transactional
+   public  Recipe findById(Long id){
+       Optional<Recipe> recipeOptional =recipeRepository.findById(id);
+       if (!recipeOptional.isPresent()) {
+           throw new ResourceNotFoundException("Couldn't find recipe with id "+id);
+       }
+
+       return recipeOptional.get();
+
+   }
+
+    @Override
+    @Transactional
+    public Recipe save(Recipe recipe) {
+        return recipeRepository.save(recipe);
+    }
+
+    public void deleteById(Long idToDelete) {
+        recipeRepository.deleteById(idToDelete);
     }
 }

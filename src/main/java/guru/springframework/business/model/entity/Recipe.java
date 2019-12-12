@@ -4,11 +4,13 @@ package guru.springframework.business.model.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
 
 @Data
 @Entity
+@Transactional
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +28,7 @@ public class Recipe {
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipe")
     private Set <Ingredient> ingredients= new HashSet <>();
     ;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL,mappedBy = "recipe")
     private Note note;
     @Lob
     private Byte[] image;
@@ -39,8 +41,10 @@ public class Recipe {
     private Set<Category> categories= new HashSet <>();
 
     public void setNote(Note note) {
-        this.note = note;
-        note.setRecipe(this);
+        if (note != null) {
+            this.note = note;
+            note.setRecipe(this);
+        }
     }
 
     public Recipe addIngredient(Ingredient ingredient){
