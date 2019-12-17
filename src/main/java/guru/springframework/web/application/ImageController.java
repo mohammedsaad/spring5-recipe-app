@@ -32,7 +32,7 @@ public class ImageController {
     public String showUploadForm(@PathVariable Long id, Model model){
         model.addAttribute("recipe", recipeService.findById(id));
 
-        return "recipe/imageuploadform";
+        return "recipe/imageUploadForm";
     }
 
     @PostMapping("recipes/{id}/image")

@@ -2,9 +2,13 @@ package guru.springframework.business.model.entity;
 
 
 import lombok.Data;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,14 +19,24 @@ public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotBlank
     private String source;
     @Lob
+    @NotBlank
     private String direction;
+    @URL
     private String url;
+    @Min(1)
+    @Max(999)
     private Integer servings;
+    @Min(1)
+    @Max(999)
     private Integer prepTime;
+    @Min(1)
+    @Max(999)
     private Integer cookTime;
     @Lob
+    @NotBlank
     private String description;
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "recipe")

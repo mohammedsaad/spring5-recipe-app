@@ -2,10 +2,12 @@ package guru.springframework.business.model.entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Set;
 @Data
+@ToString(exclude ={"recipes"} )
 @EqualsAndHashCode(exclude = {"recipes"})
 @Entity
 public class Category {

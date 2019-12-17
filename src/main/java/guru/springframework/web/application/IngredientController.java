@@ -55,12 +55,12 @@ public class IngredientController {
             recipeServiceImpl.save(recipe);
         }
 
-        return "redirect:/recipes/" + recipeId+"/ingredients/";
+        return "forward:/recipes/" + recipeId+"/ingredients/";
     }
 
-    @PostMapping()
-    public String updateIngredient(@ModelAttribute Ingredient updatedIngredient) {
-       Recipe recipe = recipeServiceImpl.findById(updatedIngredient.getRecipe().getId());
+    @PostMapping("/recipes/{recipeId}/ingredient")
+    public String updateIngredient(@ModelAttribute("ingredient") Ingredient updatedIngredient,@PathVariable Long recipeId) {
+       Recipe recipe = recipeServiceImpl.findById(recipeId);
        Optional<Ingredient> result =recipe.getIngredients().stream().filter(ingredient -> ingredient.getId().equals(updatedIngredient.getId())).findFirst();
         if(result.isPresent()){
            Ingredient ingredient= result.get();
@@ -69,6 +69,6 @@ public class IngredientController {
            ingredient.setUom(uomServiceImpl.findById(updatedIngredient.getUom().getId()).get());
         }
        recipeServiceImpl.save(recipe);
-        return "redirect:/recipes/" + recipe.getId()+"/ingredients/"+updatedIngredient.getId()+"/show";
+        return "forward:/recipes/" + recipe.getId()+"/ingredients/"+updatedIngredient.getId()+"/show";
     }
 }

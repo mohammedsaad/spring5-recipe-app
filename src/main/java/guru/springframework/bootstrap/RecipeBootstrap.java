@@ -136,6 +136,8 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
         guacRecipe.setNote(guacNotes);
         guacRecipe.setUrl("http://www.simplyrecipes.com/recipes/perfect_guacamole/");
         guacRecipe.setServings(4);
+        guacRecipe.setCookTime(2);
+        guacRecipe.setPrepTime(3);
         guacRecipe.setSource("Simply Recipes");
 
         //very redundent - could add helper method, and make this simpler
