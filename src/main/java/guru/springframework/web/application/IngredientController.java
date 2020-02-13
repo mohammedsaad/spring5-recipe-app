@@ -59,16 +59,17 @@ public class IngredientController {
     }
 
     @PostMapping("/recipes/{recipeId}/ingredient")
-    public String updateIngredient(@ModelAttribute("ingredient") Ingredient updatedIngredient,@PathVariable Long recipeId) {
-       Recipe recipe = recipeServiceImpl.findById(recipeId);
-       Optional<Ingredient> result =recipe.getIngredients().stream().filter(ingredient -> ingredient.getId().equals(updatedIngredient.getId())).findFirst();
-        if(result.isPresent()){
-           Ingredient ingredient= result.get();
-           ingredient.setAmount(updatedIngredient.getAmount());
-           ingredient.setDescription(updatedIngredient.getDescription());
-           ingredient.setUom(uomServiceImpl.findById(updatedIngredient.getUom().getId()).get());
+    public String updateIngredient(@ModelAttribute("ingredient") Ingredient updatedIngredient, @PathVariable Long recipeId, Model model) {
+        Recipe recipe = recipeServiceImpl.findById(recipeId);
+        Optional<Ingredient> result = recipe.getIngredients().stream().filter(ingredient -> ingredient.getId().equals(updatedIngredient.getId())).findFirst();
+        if (result.isPresent()) {
+            Ingredient ingredient = result.get();
+            ingredient.setAmount(updatedIngredient.getAmount());
+            ingredient.setDescription(updatedIngredient.getDescription());
+            ingredient.setUom(uomServiceImpl.findById(updatedIngredient.getUom().getId()).get());
         }
-       recipeServiceImpl.save(recipe);
-        return "forward:/recipes/" + recipe.getId()+"/ingredients/"+updatedIngredient.getId()+"/show";
+        recipeServiceImpl.save(recipe);
+        model.addAttribute("recipe", recipe);
+        return "recipe/ingredients/list";
     }
 }

@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+
+  database:
+    build:
+      context: ./registration-database
+    image: recipe-database
+    command: --default-authentication-plugin=mysql_native_password
+    # set default mysql root password, change as needed
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      #MYSQL_USER: mohammed
+      #MYSQL_PASSWORD: admin
+      MYSQL_ROOT_HOST: '%'
+    # Expose port 3306 to host. Not for the application but
+    # handy to inspect the database from the host machine.
+    ports:
+      - "3306:3306"
+      - "33060:33060"
+    networks:
+      - mysql-network
+    restart: always
+
+
+  webserver:
+    build:
+      context: ./registration-webserver
+    image: recipe-webserver
+    volumes:
+        - ./target/classes/data:/data
+    networks:
+      - mysql-network
+    environment:
+      _JAVA_OPTIONS: "-Xms256m -Xmx384m -Xdebug -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"
+    depends_on:
+      - "database"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3306"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    # open ports for tomcat and remote debugging
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+    restart: always
+
+
+networks:
+  mysql-network:
